@@ -56,7 +56,7 @@ class TicTacTest(unittest.TestCase):
         game.create_board()
         self.assertEqual(game.board, [['_','_','_'],['_','_','_'],['_','_','_']])
 
-    #подобный метод замены функции(в частности print) не покрывает оригинальные функции в тесте
+    #Подобный метод замены функции(в частности print) не покрывает оригинальные функции в тесте
     #Потому покрытие неполное
     @patch("builtins.input")
     def test_create_board_invalid_int(self, mock_input):
@@ -373,4 +373,3 @@ class TicTacTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    print(hw1.__name__)#нужно импортировать именно hw1, чтобы работало, т.к. здесб работа с модулем, а не с его составляющими
