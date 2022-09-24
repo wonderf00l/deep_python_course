@@ -58,7 +58,7 @@ class TicTacTest(unittest.TestCase):
 
     #Подобный метод замены функции(в частности print) не покрывает оригинальные функции в тесте
     #Потому покрытие неполное
-    #Хотелось бы понять, какие ходы можно использовать
+    #Хотелось бы понять, какие ходы можно использовать для покрытия этих веток
     @patch("builtins.input")
     def test_create_board_invalid_int(self, mock_input):
         game = TicTacGame()
