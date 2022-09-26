@@ -66,9 +66,10 @@ class TicTacGame:
         while True:
             if self.board[field['position_row']][field['position_col']] == '_': #Проверка на наличие элемента в поле
                 self.board[field['position_row']][field['position_col']] = value
+                break
             else:
                 print("В данном поле уже есть элемент")
-            break
+            
 
 
     def is_full(self) -> bool:
