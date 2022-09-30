@@ -3,26 +3,6 @@ import json
 from faker import Faker
 
 
-json_s = {
-    "id": "210700286",
-    "first_name": "Lindsey",
-    "last_name": "Stirling",
-}
-# print(json.loads(json_s))  # json obj - dict, list of dicts - list
-# print(type(json.dumps(json_s))) #python dict -- json str(сериализация в json)
-# print(json.dumps(json_s))
-# json.loads: json str -- python dict (десериализация, преобразование в python types)
-json_s1 = '''{
-    "key1": "value1",
-    "key2": "value2",
-    "key3": 3,
-    "key4": "qq value4 q ew "
-}'''
-
-rec_f = ['key1', 'key3', 'key4']
-kw = ['value2', 'value4']
-
-
 class ParseJson:
     """Класс, содержащий основную функцию parse_json, методы генерации данных и словарь, в который записывается
     статистика по найденным значениям """
@@ -110,15 +90,4 @@ class ParseJson:
 
     def __call__(self):
         self.parse_json(self.data, self.required_fields, self.keywords, self.keyword_func)
-
-    def __str__(self):
-        return f"{self.data=}, {self.required_fields=}, {self.keywords}"
-
-
-# pars.parse_json(2, rec_f, kw, pars.keyword_func)
-
-# parse_json(json_s1, rec_f, kw, keyword_func)
-# print(__name__)
-# print(type(json.loads(json_s1)))
-
-# pars()
+        
