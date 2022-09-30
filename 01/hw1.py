@@ -2,17 +2,16 @@ class TicTacGame:
 
 
     def __init__(self):
-        '''Инициализация атрибутов board и size(размер доски)'''
+        """Инициализация атрибутов board и size(размер доски)"""
         self.board = None
         self.size = None
 
 
     def create_board(self) -> None:
-        '''
+        """
         Ввод параметра размера доски, проверка ввода, создание пустой доски
         Размер может быть задан произвольно, но с учетом правил игры на выбор 3 или 4
-
-        '''
+        """
         while True:
             try:
                 self.size = int(input("Введите значение ширины(длины) поля (3 или 4): ")) #Считывание размера
@@ -30,17 +29,16 @@ class TicTacGame:
 
 
     def show_board(self) -> None:
-        '''Вывод доски'''
+        """Вывод доски"""
         for row in self.board:
             print(*row, sep=' ')
 
 
     def validate_input(self) -> dict:
-        '''
+        """
         Ввод параметров положения элемента на доске, проверка ввода
         Возможные положения: 1-3/1-4
-
-        '''
+        """
         while True:
             try:
                 position_row = int(input("Введите номер строки: ")) #Считывание № строки
@@ -61,7 +59,7 @@ class TicTacGame:
 
 
     def fill_the_field(self, value: str) -> None:
-        '''Заполнение поля доски с учетом введеных параметров положения'''
+        """Заполнение поля доски с учетом введеных параметров положения"""
         field = self.validate_input() #Считывание параметров положения
         while True:
             if self.board[field['position_row']][field['position_col']] == '_': #Проверка на наличие элемента в поле
@@ -73,7 +71,7 @@ class TicTacGame:
 
 
     def is_full(self) -> bool:
-        '''Проверка доски на заполненность'''
+        """Проверка доски на заполненность"""
         for row in self.board:
             for field in row:
                 if field == '_':
@@ -82,12 +80,11 @@ class TicTacGame:
 
 
     def check_winner(self) -> bool:
-        '''
+        """
         Определение победителя
         True: победили крестики/нолики, ничья
         False: игра не завершена
-
-        '''
+        """
         for tup in zip(*self.board):  # проверка по стобцам
             if len(set(tup)) == 1 and '_' not in tup:
                 if 'X' in tup:
@@ -132,7 +129,7 @@ class TicTacGame:
 
 
     def start_game(self) -> None:
-        '''Запуск игры'''
+        """Запуск игры"""
         self.create_board()
         count = 0  # счетчик ходов
         while True:
