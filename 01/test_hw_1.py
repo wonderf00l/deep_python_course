@@ -10,19 +10,19 @@ class TicTacTest(unittest.TestCase):
 
     @staticmethod
     def mock_print():
-        '''
+        """
            Mock-функция для выброса исключения
            и выхода из бесконечного цикла при вводе данных
-        '''
+        """
         print("Неверный ввод, попробуйте снова")
         raise Exception
 
 
     @staticmethod
     def mock_start_game(TicTac_obj, case):
-        '''
+        """
             Mock-функция start_game без ввода параметров
-        '''
+        """
         TicTac_obj.size = 3
         TicTac_obj.board = case
         count = 0
