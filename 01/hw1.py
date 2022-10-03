@@ -60,8 +60,8 @@ class TicTacGame:
 
     def fill_the_field(self, value: str) -> None:
         """Заполнение поля доски с учетом введеных параметров положения"""
-        field = self.validate_input() #Считывание параметров положения
         while True:
+            field = self.validate_input() #Считывание параметров положения
             if self.board[field['position_row']][field['position_col']] == '_': #Проверка на наличие элемента в поле
                 self.board[field['position_row']][field['position_col']] = value
                 break
