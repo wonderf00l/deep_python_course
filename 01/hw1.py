@@ -14,17 +14,17 @@ class TicTacGame:
         """
         while True:
             try:
-                self.size = int(input("Введите значение ширины(длины) поля (3 или 4): ")) #Считывание размера
+                self.size = int(input("Введите значение размера поля (3/4): ")) #Считывание размера
                 if self.size not in range(3, 5):                                          #Обработка ввода
                     raise IndexError
                 break
             except (ValueError, IndexError):
                 print("Неверный ввод, попробуйте снова")
         self.board = []
-        for i in range(self.size): #заполнение списка
+        for _ in range(self.size): #заполнение списка
             self.board.append([])
         for row in self.board:
-            for j in range(self.size):
+            for _ in range(self.size):
                 row.append('_')
 
 
@@ -65,8 +65,7 @@ class TicTacGame:
             if self.board[field['position_row']][field['position_col']] == '_': #Проверка на наличие элемента в поле
                 self.board[field['position_row']][field['position_col']] = value
                 break
-            else:
-                print("В данном поле уже есть элемент")
+            print("В данном поле уже есть элемент")
             
 
 
@@ -160,6 +159,6 @@ class TicTacGame:
                 print("Некорректный ввод, попробуйте снова")
 
 
-# if __name__ == "__main__":
-#     game = TicTacGame()
-#     game.start_game()
+if __name__ == "__main__":
+    game = TicTacGame()
+    game.start_game()
