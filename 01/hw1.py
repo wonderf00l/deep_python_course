@@ -14,8 +14,8 @@ class TicTacGame:
         """
         while True:
             try:
-                self.size = int(input("Введите значение размера поля (3/4): ")) #Считывание размера
-                if self.size not in range(3, 5):                                          #Обработка ввода
+                self.size = int(input("Введите значение размера поля (3/4): ")) # Считывание размера
+                if self.size not in range(3, 5): # Обработка ввода
                     raise IndexError
                 break
             except (ValueError, IndexError):
@@ -41,16 +41,16 @@ class TicTacGame:
         """
         while True:
             try:
-                position_row = int(input("Введите номер строки: ")) #Считывание № строки
-                if position_row < 1 or position_row > self.size:    #Проверка ввода
+                position_row = int(input("Введите номер строки: ")) # Считывание № строки
+                if position_row < 1 or position_row > self.size:    # Проверка ввода
                     raise IndexError
                 break
             except (ValueError, IndexError):
                 print("Неверный ввод, попробуйте снова")
         while True:
             try:
-                position_col = int(input("Введите номер столбца: ")) #Считывание № столбца
-                if position_col < 1 or position_col > self.size:     #Проверка ввода
+                position_col = int(input("Введите номер столбца: ")) # Считывание № столбца
+                if position_col < 1 or position_col > self.size:     # Проверка ввода
                     raise IndexError
                 break
             except (ValueError, IndexError):
@@ -61,8 +61,8 @@ class TicTacGame:
     def fill_the_field(self, value: str) -> None:
         """Заполнение поля доски с учетом введеных параметров положения"""
         while True:
-            field = self.validate_input() #Считывание параметров положения
-            if self.board[field['position_row']][field['position_col']] == '_': #Проверка на наличие элемента в поле
+            field = self.validate_input() # Считывание параметров положения
+            if self.board[field['position_row']][field['position_col']] == '_': # Проверка на наличие элемента в поле
                 self.board[field['position_row']][field['position_col']] = value
                 break
             print("В данном поле уже есть элемент")
@@ -101,7 +101,7 @@ class TicTacGame:
                 return True
 
         diagonal = set()
-        for row_num, row in enumerate(self.board): #проверка по главной диагонали
+        for row_num, row in enumerate(self.board): # проверка по главной диагонали
             diagonal.add(row[row_num])
         if len(diagonal) == 1 and '_' not in diagonal:
             if 'X' in diagonal:
@@ -111,7 +111,7 @@ class TicTacGame:
             return True
 
         secondary_diagonal = set()
-        for row_num, row in enumerate(self.board): #проверка по побочной диагонали
+        for row_num, row in enumerate(self.board): # проверка по побочной диагонали
             secondary_diagonal.add(row[(self.size - 1) - row_num])
         if len(secondary_diagonal) == 1 and '_' not in secondary_diagonal:
             if 'X' in secondary_diagonal:
@@ -120,7 +120,7 @@ class TicTacGame:
                 print("Выиграли нолики")
             return True
 
-        if self.is_full(): #Проверка на ничью
+        if self.is_full(): # Проверка на ничью
             print("Ничья")
             return True
 
@@ -136,7 +136,7 @@ class TicTacGame:
             print("Ход крестиков:")
             self.fill_the_field('X')
             self.show_board()
-            if count >= 2: #определение победителя начинается после 2-ого хода
+            if count >= 2: # определение победителя начинается после 2-ого хода
                 if self.check_winner():
                     break
             print("Ход ноликов:")
@@ -148,7 +148,7 @@ class TicTacGame:
             count += 1
         while True:
             try:
-                input_ = input("Рестарт?(Да/Нет)") #Перезапуск/завершение
+                input_ = input("Рестарт?(Да/Нет)") # Перезапуск/завершение
                 if input_ == "Да":
                     self.start_game()
                 else:
