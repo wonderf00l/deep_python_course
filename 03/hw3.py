@@ -101,24 +101,4 @@ class CustomList(list):
         return f"список:{self.__data}, сумма: {self.sum()}"
 
 
-print(print)
-a = CustomList([1, [[2, 's', (3, {1: 2}, {4, 5}, [[[True, 'hello', (6, 7)]]])]]])
-print(a)
-b = CustomList(True, 1, [1, 's', ])
-print(b)
-print(b < a)
-# c = b + a
-# print(c)
-d = [1, 1]
-d -= a
-print(d)
-a -= [1, 1, 1, 1, 1, 1, 1, 1]
-print('\n' * 3)
-print(a)
-# CustomList.__init__.a = 4
-# print(CustomList.__init__.__dict__) # {'a': 4}
-# tup = (1,2 )
-# b = list(tup)
-# print(b.__dir__())
-# print(help(list))
-# print(list.__dict__)
+# a = CustomList([1, [[2, 's', (3, {1: 2}, {4, 5}, [[[True, 'hello', (6, 7)]]])]]], 's', 8)
