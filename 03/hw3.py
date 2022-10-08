@@ -44,6 +44,15 @@ class CustomList(list):
         construction(data)
         self.__sum = sum(self)
 
+    @property
+    def __data(self):
+        return self.data
+
+    @__data.setter
+    def __data(self, val):
+        self.data = val
+        self.__sum = sum(self)
+    
     def __iter__(self):
         return CustomListIterator(self.__data)
 
@@ -80,17 +89,6 @@ class CustomList(list):
     def __rsub__(self, other):
         other = [item[0] - item[1] for item in zip_longest(other, self, fillvalue=0)]
         return other
-
-    # старая реализация с присоединением оставшейся части большего списка
-    # def __rsub__(self, other):
-    #    len_ = len(self)
-    #     if len(other) < len_:
-    #         for i in range(len(other)):
-    #             other[i] -= self.__data[i]
-    #         return other + self.__data[len(other):]
-    #     for j in range(len(self)):
-    #         other[j] -= self.__data[j]
-    #     return other
 
     def __eq__(self, other):
         return True if self.__sum == sum(other) else False
