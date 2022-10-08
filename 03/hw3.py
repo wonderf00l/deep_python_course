@@ -47,9 +47,6 @@ class CustomList(list):
     def __iter__(self):
         return CustomListIterator(self.__data)
 
-    def sum(self):
-        return sum(self) 
-
     def __add__(self, other):
         return CustomList([sum(item) for item in zip_longest(self, other, fillvalue=0)])
 
