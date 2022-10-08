@@ -42,7 +42,7 @@ class CustomList(list):
                 return
 
         construction(data)
-        self.__len = len(self.__data)
+        self.__sum = sum(self)
 
     def __iter__(self):
         return CustomListIterator(self.__data)
@@ -93,25 +93,25 @@ class CustomList(list):
     #     return other
 
     def __eq__(self, other):
-        return True if sum(self) == sum(other) else False
+        return True if self.__sum == sum(other) else False
 
     def __ne__(self, other):
-        return True if sum(self) != sum(other) else False
+        return True if self.__sum != sum(other) else False
 
     def __lt__(self, other):
-        return True if sum(self) < sum(other) else False
+        return True if self.__sum < sum(other) else False
 
     def __le__(self, other):
-        return True if sum(self) <= sum(other) else False
+        return True if self.__sum <= sum(other) else False
 
     def __gt__(self, other):
-        return True if sum(self) > sum(other) else False
+        return True if self.__sum > sum(other) else False
 
     def __ge__(self, other):
-        return True if sum(self) >= sum(other) else False
+        return True if self.__sum >= sum(other) else False
 
     def __str__(self):
-        return f"список:{self.__data}, сумма: {sum(self)}"
+        return f"список:{self.__data}, сумма: {self.__sum}"
 
 
 a = CustomList([1, [[2, 's', (3, {4: 5}, {6}, [[[True, 'hello', (7)]]])]]], 's', 8, '9', {(9): (10)})
