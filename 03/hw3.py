@@ -111,7 +111,7 @@ class CustomList(list):
         return True if sum(self) >= sum(other) else False
 
     def __str__(self):
-        return f"список:{self.__data}, сумма: {self.sum()}"
+        return f"список:{self.__data}, сумма: {sum(self)}"
 
 
 a = CustomList([1, [[2, 's', (3, {4: 5}, {6}, [[[True, 'hello', (7)]]])]]], 's', 8, '9', {(9): (10)})
