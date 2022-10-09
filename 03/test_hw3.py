@@ -1,6 +1,5 @@
 import unittest
-from unittest.mock import Mock
-from hw3 import CustomList, CustomListIterator
+from hw3 import CustomList
 
 
 class TestCustomList(unittest.TestCase):
@@ -85,10 +84,26 @@ class TestCustomList(unittest.TestCase):
         self.assertEqual(lst2, [1, 0])
 
     def test_comparison(self):
-        pass
+        a = CustomList(1, 2)
+        b = CustomList(3, 4)
+        c = CustomList(1, 1, 1)
+        d = CustomList(1)
+        lst = [1, 1]
+        lst1 = [1, 1, 1]
+        lst2 = [1]
+        self.assertTrue(a == c)
+        self.assertFalse(a != c)
+        self.assertTrue(a < b)
+        self.assertTrue(c > d)
+        self.assertTrue(a <= c)
+        self.assertTrue(c >= a)
+        self.assertTrue(a > lst)
+        self.assertFalse(a != lst1)
+        self.assertTrue(lst2 < a)
 
     def test_output(self):
-        pass
+        a = CustomList(1, 2)
+        self.assertEqual(str(a), f"список:{[1, 2]}, сумма: {3}")
 
 
 if __name__ == '__main__':
