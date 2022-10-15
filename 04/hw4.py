@@ -48,7 +48,7 @@ class PositiveInteger:
         self._attr = f"_{name}"
 
     def __get__(self, instance, owner):
-        print('even:', end=' ') if self._attr % 2 == 0 else print('uneven:', end=' ')
+        print('even positive:', end=' ') if self._attr % 2 == 0 else print('uneven positive:', end=' ')
         return self._attr
 
     def __set__(self, instance, value):
