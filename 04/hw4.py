@@ -73,7 +73,7 @@ class CustomClass(metaclass=CustomMeta):
         super().__setattr__(f'custom_{key}', value)
 
     @staticmethod
-    def line(self):
+    def line():
         return 100
 
     def __str__(self):
