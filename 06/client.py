@@ -11,6 +11,9 @@ from time import time
 class Client:
     def __init__(self):
         self._host = socket.gethostname()
+        self._port = None
+        self._workers = None
+        self._file_path = None
         try:
             opts = getopt.getopt(sys.argv[1:], "p:w:f:", ["port=", "workers=", "file="])[0]
         except getopt.GetoptError as error:
