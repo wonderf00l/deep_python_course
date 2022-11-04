@@ -15,6 +15,9 @@ class Server:
 
     def __init__(self):
         self._host = socket.gethostname()
+        self._port = None
+        self._workers = None
+        self._k_words = None
         try:
             opts = getopt.getopt(sys.argv[1:], "p:w:k:",
                                  ["port=", "workers="])[0]
