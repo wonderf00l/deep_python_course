@@ -1,5 +1,6 @@
 import getopt
 import sys
+from time import time
 import socket
 import threading
 import queue
@@ -14,9 +15,8 @@ class Server:
 
     def __init__(self):
         self._host = socket.gethostname()
-        argv = sys.argv[1:]
         try:
-            opts = getopt.getopt(argv, "p:w:k:",
+            opts = getopt.getopt(sys.argv[1:], "p:w:k:",
                                  ["port=", "workers="])[0]
         except getopt.GetoptError as error:
             print(error)
@@ -46,7 +46,7 @@ class Server:
         )
         while True:
             try:
-                self._server_sock.bind((self._host, self._port))
+                self._server_sock.bind(("127.0.0.1", self._port))
                 break
             except OSError:
                 print("Address already in use, try another")
@@ -57,7 +57,9 @@ class Server:
 
     def serve_client(self):
         while True:
+            print("Waiting for the clients...")
             client_sock, client_addr = self._server_sock.accept()
+            start = time()
             print(f"{client_addr} has connected to the server")
             stat = Queue()
             threads = [threading.Thread(
@@ -75,49 +77,43 @@ class Server:
                             break
                         if not char:
                             raise ConnectionError
-                        data += char
-                    print(f"data: {data}")
-                    self._queue.put(data)
+                        data += char 
+                    self._queue.put(
+                        data)
             except ConnectionError:
                 print("No data to receive")
             for thread in threads:
                 thread.join()
             client_sock.close()
-            print("End of the session on the server\n")
-
+            end = time()
+            print(f"End of the session on the server, time: {end - start}\n")
+            
     def request_processing(self, client_sock, stat):
         while True:
             try:
-                url = self._queue.get(timeout=5)
+                url = self._queue.get(
+                    timeout=2) 
+                if not url:
+                    raise ConnectionError
                 with self._lock:
-                    print(f"Thread {threading.get_ident()} has started processing {url}")
+                    print(f"Thread {threading.get_ident()} "
+                          f"has started processing {url}")
                 data = requests.get(url, timeout=8)
-                soup = BeautifulSoup(data.text, "lxml")
+                soup = BeautifulSoup(data.content, "html.parser")
                 lst = soup.text.replace('\n', '').split(' ')
                 lst_of_words = [word for word in lst if len(word) > 1]
-                # lst_of_words = filter(self.func, lst)
-                words_rate = dict(Counter(lst_of_words).most_common(self._k_words))
+                words_rate = {url: dict(Counter(lst_of_words).most_common(self._k_words))}
                 json_doc = json.dumps(words_rate)
-                client_sock.sendall(json_doc.encode(encoding="utf-8"))
+                client_sock.sendall(json_doc.encode(encoding="utf-8")) 
+                stat.put(json_doc)
                 with self._lock:
-                    # client_sock.sendall(json_doc.encode(encoding="utf-8")) # is this thread-safe?
-                    stat.put(json_doc)
                     print(f"{stat.qsize()} URLs have been processed")
             except queue.Empty:
                 with self._lock:
-                    print("Queue is empty, no URLs to process")  
-                    print(f" Thread {threading.get_ident()} isn't alive anymore")
+                    print(f"Thread {threading.get_ident()} isn't alive anymore")
                     break
             except ConnectionError:
                 print("Client suddenly closed tne connection")
-
-    # @staticmethod
-    # def func(word):
-    #     try:
-    #         ord(word)
-    #     except TypeError:
-    #         return True
-
 
 if __name__ == '__main__':
     server = Server()
