@@ -83,7 +83,6 @@ class Client:
                 for _ in range(0, 100):
                     self._queue.put(string)
             for string in i_list:
-                # print(string, end='')
                 self._queue.put(string)
             if not self._queue.empty():
                 threads = [threading.Thread(
