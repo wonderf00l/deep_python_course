@@ -18,6 +18,14 @@ class Server:
         self._port = None
         self._workers = None
         self._k_words = None
+        self._server_sock = socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        )
+        self._queue = Queue()
+        self._lock = threading.Lock()
+
+    def server_configuration(self):
         try:
             opts = getopt.getopt(sys.argv[1:], "p:w:k:",
                                  ["port=", "workers="])[0]
@@ -43,10 +51,6 @@ class Server:
                     break
                 except ValueError:
                     continue
-        self._server_sock = socket.socket(
-            socket.AF_INET,
-            socket.SOCK_STREAM
-        )
         while True:
             try:
                 self._server_sock.bind(("127.0.0.1", self._port))
@@ -55,8 +59,6 @@ class Server:
                 print("Address already in use, try another")
                 self._port = int(input("Another port: "))
         self._server_sock.listen()
-        self._queue = Queue()
-        self._lock = threading.Lock()
 
     def serve_client(self):
         while True:
@@ -75,29 +77,33 @@ class Server:
                 while True:
                     data = ''
                     while True:
+                        client_sock.settimeout(2)
                         char = client_sock.recv(1).decode()
                         if char == '\n':
                             break
                         if not char:
                             raise ConnectionError
-                        data += char 
-                    self._queue.put(
-                        data)
+                        data += char
+                    if data:
+                        self._queue.put(
+                            data)
             except ConnectionError:
-                print("No data to receive")
+                print("recv() got None,"
+                      "no data to receive anymore")
+            except TimeoutError as error:
+                print(f"recv() status: {error}, "
+                      f"no data to receive")
             for thread in threads:
                 thread.join()
             client_sock.close()
             end = time()
             print(f"End of the session on the server, time: {end - start}\n")
-            
+
     def request_processing(self, client_sock, stat):
         while True:
             try:
                 url = self._queue.get(
-                    timeout=2) 
-                if not url:
-                    raise ConnectionError
+                    timeout=5)
                 with self._lock:
                     print(f"Thread {threading.get_ident()} "
                           f"has started processing {url}")
@@ -107,17 +113,26 @@ class Server:
                 lst_of_words = [word for word in lst if len(word) > 1]
                 words_rate = {url: dict(Counter(lst_of_words).most_common(self._k_words))}
                 json_doc = json.dumps(words_rate)
-                client_sock.sendall(json_doc.encode(encoding="utf-8")) 
+                client_sock.sendall(json_doc.encode(encoding="utf-8"))
+                print(f"{threading.get_ident()} "
+                      f"has sent {url} stat to the client")
                 stat.put(json_doc)
                 with self._lock:
-                    print(f"{stat.qsize()} URLs have been processed")
+                    print(f"{stat.qsize()} valid URLs have been processed")
             except queue.Empty:
                 with self._lock:
-                    print(f"Thread {threading.get_ident()} isn't alive anymore")
-                    break
-            except ConnectionError:
-                print("Client suddenly closed tne connection")
+                    print(f"Queue is empty, "
+                          f"thread {threading.get_ident()} isn't alive anymore")
+                break
+            except requests.exceptions.MissingSchema:
+                with self._lock:
+                    print(f"Thread {threading.get_ident()} got "
+                          f"invalid URL!")
+                json_doc = json.dumps(f"{repr(url)} -- INVALID URL")
+                client_sock.sendall(json_doc.encode(encoding="utf-8"))
+
 
 if __name__ == '__main__':
     server = Server()
+    server.server_configuration()
     server.serve_client()
