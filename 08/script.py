@@ -77,5 +77,5 @@ if __name__ == "__main__":
         for item in lst[1:]:
             URLs_lst.append(item[:-1])
     start = time()
-    asyncio.run(main(URLs_lst, test="valid"))
+    asyncio.run(main(URLs_lst))
     print(f"It took {time() - start} sec")
