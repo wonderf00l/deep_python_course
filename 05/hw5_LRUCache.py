@@ -16,7 +16,6 @@ class LRUCache:
         if key in self.cache:
             self.cache.pop(key)
             self.cache[key] = value
-            # self.cache[key] = self.cache.pop(key) # should set new val
             return
         if len(self.cache) >= self.capacity and key not in self.cache:
             self.cache.pop(list(self.cache.keys())[0])
