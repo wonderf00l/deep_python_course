@@ -1,5 +1,6 @@
 import os
 import unittest
+from filter import file_filter
 
 
 class MyTestCase(unittest.TestCase):
