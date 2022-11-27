@@ -1,3 +1,4 @@
+import os
 import cProfile
 import pstats
 import weakref
@@ -63,56 +64,73 @@ def timer(func):
 
 def profile_deco(func):
     @wraps(func)
-    def wrap_(cls, quantity, *args, **kwargs):
+    def wrap_(*args, **kwargs):
         prof = cProfile.Profile()
         prof.enable()
-        func(cls, quantity, *args, **kwargs)
+        res = func(*args, **kwargs)
         prof.disable()
-        with open("profile_stat.txt", "a+", encoding="utf-8") as file:
+        filename = "profile_stat.txt"
+        with open(filename, "a+", encoding="utf-8") as file:
             ps_obj = pstats.Stats(prof, stream=file).sort_stats("cumulative")
             ps_obj.print_stats()
 
         def print_stat():
-            with open("profile_stat.txt", "r", encoding="utf-8") as file_:
+            with open(filename, "r", encoding="utf-8") as file_:
                 print(file_.read())
 
         def del_stat():
-            with open("profile_stat.txt", "w+", encoding="utf-8") as file_:
-                file_.seek(0)
+            os.remove(filename)
 
         wrap_.print_stat = print_stat
         wrap_.del_stat = del_stat
+        return res
 
+    # del_stat
 
     return wrap_
 
 
 @profile_deco
-@timer
+# @timer
 def processing(cls, quantity, *args, **kwargs):
+    start = time()
     instances = [cls(*args, **kwargs) for _ in range(quantity)]
+    print(f"Instantiation of {cls} took {time() - start} sec")
+    start = time()
     for inst in instances:
         attr_lst = [getattr(inst, attr)
                     for attr in dir(inst) if attr[:2] != '__' and attr[-2:] != '__']
         for attr in attr_lst:
             if isinstance(attr, str):
                 attr.upper()
+    print(f"Attr processing of {cls} took {time() - start} sec")
     return instances
 
 
 # @profile
 def main():
     arg = ["cpu", "gpu", "ram", "hdd"]
-    quantity = 5000
+    quantity = 10000
     res_1 = processing(Computer, quantity, *arg)
+    class_ = Computer.__name__
+    t = time()
     del res_1
+    print(f"deletion of class {class_} took {time() - t} sec", end='\n' * 2)
+
     res_2 = processing(ComputerSlots, quantity, *arg)
+    class_ = ComputerSlots.__name__
+    t = time()
     del res_2
-    # res_3 = processing(ComputerWeakref, quantity, *arg)
-    # del res_3
+    print(f"deletion of class {class_} took {time() - t} sec", end='\n' * 2)
+
+    res_3 = processing(ComputerWeakref, quantity, *arg)
+    class_ = ComputerWeakref.__name__
+    t = time()
+    del res_3
+    print(f"deletion of class {class_} took {time() - t} sec", end='\n' * 2)
     processing.print_stat()
     # processing.del_stat()
 
-
-if __name__ == "__main__":  # maiN()
+    
+if __name__ == "__main__":
     main()
