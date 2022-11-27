@@ -1,5 +1,5 @@
 import unittest
-from file_filter import file_filter
+from filter import file_filter
 from io import StringIO
 
 
