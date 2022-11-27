@@ -31,6 +31,28 @@ class MyTestCase(unittest.TestCase):
         inst_1[1] = "new_val"
         inst_1[4] = '4'
         self.assertEqual(inst_1[2], None)
+        self.assertEqual([inst_1[3], inst_1[1], inst_1[4]], ['3', "new_val", '4'])
+
+        inst_2 = LRUCache(2)
+        inst_2["k1"] = "val1"
+        inst_2["k2"] = "val2"
+        self.assertEqual([inst_2["k1"], inst_2["k2"]], ["val1", "val2"])
+        self.assertEqual(inst_2.cache, {"k1": "val1", "k2": "val2"})
+        self.assertEqual(inst_2["k3"], None)
+        self.assertEqual(inst_2["k2"], "val2")
+        self.assertEqual(inst_2.cache, {"k1": "val1", "k2": "val2"})
+        self.assertEqual(inst_2["k1"], "val1")
+        self.assertEqual(inst_2.cache, {"k2": "val2", "k1": "val1"})
+
+        inst_2["k3"] = "val3"
+        self.assertEqual(inst_2["k2"], None)
+        self.assertEqual(inst_2.cache, {"k1": "val1", "k3": "val3"})
+
+        self.assertEqual(inst_2["k3"], "val3")
+        self.assertEqual(inst_2.cache, {"k1": "val1", "k3": "val3"})
+        self.assertEqual(inst_2["k2"], None)
+        self.assertEqual(inst_2["k1"], "val1")
+        self.assertEqual(inst_2.cache, {"k3": "val3", "k1": "val1"})
 
 
 if __name__ == '__main__':
