@@ -1,5 +1,5 @@
 import unittest
-from hw5_LRUCache import LRUCache
+from LRUCache import LRUCache
 
 
 class MyTestCase(unittest.TestCase):
