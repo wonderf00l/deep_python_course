@@ -29,11 +29,18 @@ class ParseJson:
             'company_email': fake.company_email(),
             'time': fake.time()
         }
-        print("Data:")
-        for key, val in doc.items():
-            print(f"{key}:{val}")
         json_doc = json.dumps(doc)
         return json_doc
+
+    def print_data(self):
+        print("Data: ")
+        for key, val in json.loads(self.data).items():
+            print(f"{key}:{val}")
+        print('\n')
+
+    def clean_stat(self):
+        self.info_dict.clear()
+        return
 
     @staticmethod
     def required_fields_generation(data, quantity=3):
@@ -65,19 +72,36 @@ class ParseJson:
                     keywords.append(split_item)
         return keywords
 
-    def parse_json(self, json_str: str, required_fields=None, keywords=None, keyword_callback=None):
+    def parse_json(self, json_str: str, keyword_callback, required_fields=None, keywords=None):
         """Сопоставление требуемых полей и значений JSON объекта, их обработка"""
         if not isinstance(json_str, str):
             json_str = str(json_str)
         json_doc = json.loads(json_str)
         print(f"Требуемые поля: {required_fields}")
-        print(f"Требуемые значения: {keywords}")
-        for key, value in json_doc.items():
-            if key in required_fields:
-                if isinstance(value, str):
-                    for item in value.split(sep=' '):
-                        if item in keywords:
-                            keyword_callback(item)
+        print(f"Требуемые значения: {keywords}", end='\n'*2)
+        try:
+            if not required_fields:
+                for _, value in json_doc.items():
+                    if isinstance(value, str):
+                        for item in value.split(sep=' '):
+                            if item in keywords:
+                                keyword_callback(item)
+            elif not keywords:
+                for key, _ in json_doc.items():
+                    if key in required_fields:
+                        keyword_callback(key)
+            else:
+                for key, value in json_doc.items():
+                    if key in required_fields:
+                        if isinstance(value, str):
+                            for item in value.split(sep=' '):
+                                if item in keywords:
+                                    keyword_callback(item)
+        except TypeError:
+            print("Требуемые поля и слова не получены")
+            return
+        if not len(self.info_dict):
+            print("Не удалось найти требуемые слова")
         for key, value in self.info_dict.items():
             print(f"'{key}' получен {value} раз(а)")
 
@@ -89,5 +113,22 @@ class ParseJson:
         self.info_dict[item] += 1
 
     def __call__(self):
-        self.parse_json(self.data, self.required_fields, self.keywords, self.keyword_func)
-        
+        self.parse_json(self.data, self.keyword_func, self.required_fields, self.keywords)
+
+    def __str__(self):
+        return f"{self.data=}, {self.required_fields=}, {self.keywords}"
+
+
+if __name__ == "__main__":
+    tt = ParseJson()
+    tt.print_data()
+    tt()
+    tt.clean_stat()
+    tt.parse_json(tt.data, tt.keyword_func, tt.required_fields, None)
+    tt.clean_stat()
+    print('\n')
+    tt.parse_json(tt.data, tt.keyword_func, None, tt.keywords)
+    tt.clean_stat()
+    print('\n')
+    tt.parse_json(tt.data, tt.keyword_func, None, None)
+    print('\n')
